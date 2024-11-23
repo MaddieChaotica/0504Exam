@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="VideoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="ClassificationCode">
+    <Key>
+      <PropertyRef Name="MovieID" />
+    </Key>
+    <Property Name="MovieID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MovieName" Type="nchar" MaxLength="300" />
+    <Property Name="Genre" Type="nchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Client">
+    <Key>
+      <PropertyRef Name="ClientID" />
+    </Key>
+    <Property Name="ClientID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FirstName" Type="nchar" MaxLength="50" />
+    <Property Name="Surname" Type="nchar" MaxLength="50" />
+    <Property Name="SecondName" Type="nchar" MaxLength="50" />
+    <Property Name="Address" Type="nchar" MaxLength="100" />
+    <Property Name="Phone" Type="nchar" MaxLength="12" />
+  </EntityType>
+  <EntityType Name="TurnoverSheet">
+    <Key>
+      <PropertyRef Name="TurnoverID" />
+    </Key>
+    <Property Name="TurnoverID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ClientID" Type="int" />
+    <Property Name="CassetteID" Type="int" />
+    <Property Name="GiveOutDate" Type="date" />
+    <Property Name="ReturnDate" Type="date" />
+    <Property Name="Price" Type="decimal" Precision="18" Scale="3" />
+  </EntityType>
+  <EntityType Name="Videoteka">
+    <Key>
+      <PropertyRef Name="CassetteID" />
+    </Key>
+    <Property Name="CassetteID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MovieID" Type="int" />
+    <Property Name="Availability" Type="nchar" MaxLength="10" />
+  </EntityType>
+  <Association Name="FK_TurnoverSheet_Client">
+    <End Role="Client" Type="Self.Client" Multiplicity="0..1" />
+    <End Role="TurnoverSheet" Type="Self.TurnoverSheet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Client">
+        <PropertyRef Name="ClientID" />
+      </Principal>
+      <Dependent Role="TurnoverSheet">
+        <PropertyRef Name="ClientID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TurnoverSheet_Videoteka">
+    <End Role="Videoteka" Type="Self.Videoteka" Multiplicity="0..1" />
+    <End Role="TurnoverSheet" Type="Self.TurnoverSheet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Videoteka">
+        <PropertyRef Name="CassetteID" />
+      </Principal>
+      <Dependent Role="TurnoverSheet">
+        <PropertyRef Name="CassetteID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Videoteka_ClassificationCode">
+    <End Role="ClassificationCode" Type="Self.ClassificationCode" Multiplicity="0..1" />
+    <End Role="Videoteka" Type="Self.Videoteka" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ClassificationCode">
+        <PropertyRef Name="MovieID" />
+      </Principal>
+      <Dependent Role="Videoteka">
+        <PropertyRef Name="MovieID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="VideoModelStoreContainer">
+    <EntitySet Name="ClassificationCode" EntityType="Self.ClassificationCode" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TurnoverSheet" EntityType="Self.TurnoverSheet" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Videoteka" EntityType="Self.Videoteka" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_TurnoverSheet_Client" Association="Self.FK_TurnoverSheet_Client">
+      <End Role="Client" EntitySet="Client" />
+      <End Role="TurnoverSheet" EntitySet="TurnoverSheet" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TurnoverSheet_Videoteka" Association="Self.FK_TurnoverSheet_Videoteka">
+      <End Role="Videoteka" EntitySet="Videoteka" />
+      <End Role="TurnoverSheet" EntitySet="TurnoverSheet" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Videoteka_ClassificationCode" Association="Self.FK_Videoteka_ClassificationCode">
+      <End Role="ClassificationCode" EntitySet="ClassificationCode" />
+      <End Role="Videoteka" EntitySet="Videoteka" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

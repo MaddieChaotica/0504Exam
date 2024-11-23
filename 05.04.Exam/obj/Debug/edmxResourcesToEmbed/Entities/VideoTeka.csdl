@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="VideoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="ClassificationCode">
+    <Key>
+      <PropertyRef Name="MovieID" />
+    </Key>
+    <Property Name="MovieID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MovieName" Type="String" MaxLength="300" FixedLength="true" Unicode="true" />
+    <Property Name="Genre" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+    <NavigationProperty Name="Videoteka" Relationship="Self.FK_Videoteka_ClassificationCode" FromRole="ClassificationCode" ToRole="Videoteka" />
+  </EntityType>
+  <EntityType Name="Client">
+    <Key>
+      <PropertyRef Name="ClientID" />
+    </Key>
+    <Property Name="ClientID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="Surname" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="SecondName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="Address" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+    <Property Name="Phone" Type="String" MaxLength="12" FixedLength="true" Unicode="true" />
+    <NavigationProperty Name="TurnoverSheet" Relationship="Self.FK_TurnoverSheet_Client" FromRole="Client" ToRole="TurnoverSheet" />
+  </EntityType>
+  <EntityType Name="TurnoverSheet">
+    <Key>
+      <PropertyRef Name="TurnoverID" />
+    </Key>
+    <Property Name="TurnoverID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ClientID" Type="Int32" />
+    <Property Name="CassetteID" Type="Int32" />
+    <Property Name="GiveOutDate" Type="DateTime" Precision="0" />
+    <Property Name="ReturnDate" Type="DateTime" Precision="0" />
+    <Property Name="Price" Type="Decimal" Precision="18" Scale="3" />
+    <NavigationProperty Name="Client" Relationship="Self.FK_TurnoverSheet_Client" FromRole="TurnoverSheet" ToRole="Client" />
+    <NavigationProperty Name="Videoteka" Relationship="Self.FK_TurnoverSheet_Videoteka" FromRole="TurnoverSheet" ToRole="Videoteka" />
+  </EntityType>
+  <EntityType Name="Videoteka">
+    <Key>
+      <PropertyRef Name="CassetteID" />
+    </Key>
+    <Property Name="CassetteID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MovieID" Type="Int32" />
+    <Property Name="Availability" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <NavigationProperty Name="ClassificationCode" Relationship="Self.FK_Videoteka_ClassificationCode" FromRole="Videoteka" ToRole="ClassificationCode" />
+    <NavigationProperty Name="TurnoverSheet" Relationship="Self.FK_TurnoverSheet_Videoteka" FromRole="Videoteka" ToRole="TurnoverSheet" />
+  </EntityType>
+  <Association Name="FK_Videoteka_ClassificationCode">
+    <End Role="ClassificationCode" Type="Self.ClassificationCode" Multiplicity="0..1" />
+    <End Role="Videoteka" Type="Self.Videoteka" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ClassificationCode">
+        <PropertyRef Name="MovieID" />
+      </Principal>
+      <Dependent Role="Videoteka">
+        <PropertyRef Name="MovieID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TurnoverSheet_Client">
+    <End Role="Client" Type="Self.Client" Multiplicity="0..1" />
+    <End Role="TurnoverSheet" Type="Self.TurnoverSheet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Client">
+        <PropertyRef Name="ClientID" />
+      </Principal>
+      <Dependent Role="TurnoverSheet">
+        <PropertyRef Name="ClientID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TurnoverSheet_Videoteka">
+    <End Role="Videoteka" Type="Self.Videoteka" Multiplicity="0..1" />
+    <End Role="TurnoverSheet" Type="Self.TurnoverSheet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Videoteka">
+        <PropertyRef Name="CassetteID" />
+      </Principal>
+      <Dependent Role="TurnoverSheet">
+        <PropertyRef Name="CassetteID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="VideoProkatEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="ClassificationCode" EntityType="Self.ClassificationCode" />
+    <EntitySet Name="Client" EntityType="Self.Client" />
+    <EntitySet Name="TurnoverSheet" EntityType="Self.TurnoverSheet" />
+    <EntitySet Name="Videoteka" EntityType="Self.Videoteka" />
+    <AssociationSet Name="FK_Videoteka_ClassificationCode" Association="Self.FK_Videoteka_ClassificationCode">
+      <End Role="ClassificationCode" EntitySet="ClassificationCode" />
+      <End Role="Videoteka" EntitySet="Videoteka" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TurnoverSheet_Client" Association="Self.FK_TurnoverSheet_Client">
+      <End Role="Client" EntitySet="Client" />
+      <End Role="TurnoverSheet" EntitySet="TurnoverSheet" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TurnoverSheet_Videoteka" Association="Self.FK_TurnoverSheet_Videoteka">
+      <End Role="Videoteka" EntitySet="Videoteka" />
+      <End Role="TurnoverSheet" EntitySet="TurnoverSheet" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
